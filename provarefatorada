@@ -1,0 +1,232 @@
+/// <reference types="cypress" />
+
+//import { forEach } from "cypress/types/lodash";
+
+//DESENVOLVIMENTO
+const acessarPaginaDoSegmento = (segmento) => {
+    cy.visit('https://www.siagri.com.br/')
+    cy.get('.dropdown-toggle:first').click()
+    cy.get('.show > .dropdown-item:nth-child(1)').click()
+
+    if (segmento !== undefined) {
+        cy.get(segmento).click();
+    }
+}
+
+const validaFormulario = () => {
+    cy.get('.segmentos-titulo-grid > .container-fluid > .form-open').click();
+    cy.get('#modal-form').should('be.visible')
+    cy.get('#form-close').click();
+}
+
+const validaDesafiosDoSegmento = (desafios) => {
+    desafios.forEach((desafio) => {
+        cy.get('.segmentos-vantagens-grid').should('contain', desafio)
+    });
+}
+
+const validaInformacoesBannerPrincipal = (elemento, texto) => {
+    cy.get(elemento).should('contain', texto)
+}
+
+const validaPaginaAtiva = (url) => {
+
+    cy.location().should((loc) => {
+        expect(loc.href).to.eq(url)
+    });
+}
+
+const validaSegmentosAtendidos = (segmentos) => {
+    segmentos.forEach((segmento) => {
+        cy.get('span').should('contain', segmento)
+    });
+}
+
+describe('CT1.0', () => {
+
+    before(() => {
+        acessarPaginaDoSegmento()
+    })
+
+    // CT-1.1 - Validar segmentos atendidos pelas soluções SIAGRI
+    it('CT-1.1 - Validar segmentos atendidos pelas soluções SIAGRI - Página principal', () => {
+        const desafios = ['Distribuidor de insumos', 'Loja agropecuária', 'Armazéns gerais',
+            'Produtor agrícola', 'Sementeira', 'Outros']
+
+        validaSegmentosAtendidos(desafios)
+    })
+})
+
+
+describe('CT2.0', () => {
+
+    before(() => {
+        acessarPaginaDoSegmento('.seg-3 > span')
+    })
+
+    //CT-2.0 - validar informações do segmento - Distribuidor de insumos
+    it('CT-2.0: Validar pagina ativa - "Distribuidor de insumos"', () => {
+        const url = "https://www.siagri.com.br/segmentos/distribuidor-insumos"
+        validaPaginaAtiva(url)
+    })
+
+
+    //CT-2.1 - validar pagina ativa - Distribuidor de insumos
+    it('CT-2.1: Validar informações do banner principal - Distribuidor de insumos', () => {
+        const elementoDoTitulo = '.segmentos-titulo-grid h2'
+        const textoTitulo = 'Softwares para gestão de distribuidores de insumos agrícolas'
+        const elementoDescricao = '.segmentos-titulo-grid p'
+        const textoDescricao = 'Otimize processos, reduza desperdícios e tenha o controle de suas lojas em qualquer hora e lugar. Com o Grupo Siagri, você compra melhor, evita perdas no estoque, vende com mais eficiência e ainda tem mais segurança nas operações de Barter!'
+        validaInformacoesBannerPrincipal(elementoDoTitulo, textoTitulo)
+        validaInformacoesBannerPrincipal(elementoDescricao, textoDescricao)
+        validaFormulario()
+    })
+
+    //CT-2.2 Validar informações dos desafios do segmento - Distribuidor de insumos
+    it('CT-2.2: Validar informações do segmento - "Distribuidor de insumos"', () => {
+        const desafiosDoSegmento = ['Estoque eficiente',
+            'Formação de preços',
+            'Gestão de logística',
+            'Ampliar mix de atividades',
+            'Gestão orçamentária']
+
+        validaDesafiosDoSegmento(desafiosDoSegmento)
+
+    })
+})
+
+describe('CT3.0', () => {
+
+    beforeEach(() => {
+        acessarPaginaDoSegmento('.seg-4 > span')
+    })
+
+    //CT-3.0 - validar página ativa  - Loja Agropecuária
+    it('CT-3.0: Validar pagina ativa - "Loja Agropecuária"', () => {
+        const url = "https://www.siagri.com.br/segmentos/loja-agropecuaria"
+        validaPaginaAtiva(url)
+    })
+
+    //CT-3.1 - validar pagina ativa - "Loja Agropecuária"
+    it('CT-3.1: Validar informações do banner principal - "Loja Agropecuária"', () => {
+        const elementoDoTitulo = '.segmentos-titulo-grid h2'
+        const textoTitulo = 'Softwares para gestão de lojas e varejo agropecuário'
+        const elementoDescricao = '.segmentos-titulo-grid p'
+        const textoDescricao = 'Ganhe agilidade em vendas, confiança nos controles de estoque e custos. Fidelize seu cliente e gerencie sua loja agropecuária de forma completa com o software Siagri.'
+        validaInformacoesBannerPrincipal(elementoDoTitulo, textoTitulo)
+        validaInformacoesBannerPrincipal(elementoDescricao, textoDescricao)
+        validaFormulario()
+    })
+
+    //CT-3.2 Validar informações dos desafios do segmento - "Loja Agropecuária"
+    it('CT-3.2: Validar informações do segmento - "Loja Agropecuária"', () => {
+        const desafiosDoSegmento = ['Agilidade no atendimento',
+            'Eficiência operacional',
+            'Controle de comissionamento',
+            'Conformidade fiscal',
+            'Eficiência no fluxo de caixa em dia']
+        validaDesafiosDoSegmento(desafiosDoSegmento)
+    })
+})
+describe('CT4.0', () => {
+
+    beforeEach(() => {
+        acessarPaginaDoSegmento('.seg-5 > span')
+    })
+
+    //CT-4.0 - validar página ativa  - Armazéns gerais’.
+    it('CT-4.0: Validar pagina ativa - "Armazéns gerais"', () => {
+        const url = "https://www.siagri.com.br/segmentos/armazens-gerais"
+        validaPaginaAtiva(url)
+    })
+
+    //CT-4.1 - validar pagina ativa - "Armazéns gerais"
+    it('CT-4.1: Validar informações do banner principal - "Armazéns gerais"', () => {
+        const elementoDoTitulo = '.segmentos-titulo-grid h2'
+        const textoTitulo = 'Softwares para gestão de armazéns gerais e cerealistas'
+        const elementoDescricao = '.segmentos-titulo-grid p'
+        const textoDescricao = 'Ganhe eficiência desde o recebimento até a expedição dos grãos. Com o Grupo Siagri, você gerencia todos os processos de armazenagem de grãos com agilidade e segurança.'
+        validaInformacoesBannerPrincipal(elementoDoTitulo, textoTitulo)
+        validaInformacoesBannerPrincipal(elementoDescricao, textoDescricao)
+        validaFormulario()
+
+    })
+
+    //CT-4.2 Validar informações dos desafios do segmento - "Armazéns gerais"
+    it('CT-4.2: Validar informações do segmento - "Armazéns gerais"', () => {
+        const desafiosDoSegmento = ['Gestão de contratos',
+            'Controle de saldos de terceiros',
+            'Controle de retenções e transgenia',
+            'Análise de exposição',
+            'Controle de serviços prestados']
+        validaDesafiosDoSegmento(desafiosDoSegmento)
+    })
+})
+
+describe('CT5.0', () => {
+
+    beforeEach(() => {
+        acessarPaginaDoSegmento('.seg-6 > span')
+    })
+
+    //CT-5.0 - validar página ativa  - "Produtor Agrícola"’.
+    it('CT-5.0: Validar pagina ativa - "Produtor Agrícola"', () => {
+        const url = "https://www.siagri.com.br/segmentos/produtor-agricola"
+        validaPaginaAtiva(url)
+    })
+
+    //CT-5.1 - validar pagina ativa - "Produtor Agrícola"
+    it('CT-5.1: Validar informações do banner principal - "Produtor Agrícola"', () => {
+        const elementoDoTitulo = '.segmentos-titulo-grid h2'
+        const textoTitulo = 'Softwares de gestão para produtores de grãos e algodão'
+        const elementoDescricao = '.segmentos-titulo-grid p'
+        const textoDescricao = 'Gestão do planejamento da safra à contabilidade. Com o Grupo Siagri você gerencia seu negócio de ponta a ponta, centralizando a gestão administrativa, financeira, fiscal e operacional.'
+        validaInformacoesBannerPrincipal(elementoDoTitulo, textoTitulo)
+        validaInformacoesBannerPrincipal(elementoDescricao, textoDescricao)
+        validaFormulario()
+    })
+
+    //CT-5.2 Validar informações dos desafios do segmento - "Produtor Agrícola"
+    it('CT-5.2: Validar informações do segmento - "Produtor Agrícola"', () => {
+        const desafiosDoSegmento = ['Planejamento de safra',
+            'Gestão de estoque (armazenagem)',
+            'Controle de custos',
+            'Padronização de processos',
+            'Gestão orçamentária']
+        validaDesafiosDoSegmento(desafiosDoSegmento)
+    })
+})
+
+describe('CT6.0', () => {
+
+    beforeEach(() => {
+        acessarPaginaDoSegmento('.seg-7 > span')
+    })
+
+    //CT-6.0 - validar página ativa  - "Sementeira"’.
+    it('CT-6.0: Validar pagina ativa - "Sementeira"', () => {
+        const url = "https://www.siagri.com.br/segmentos/sementeira"
+        validaPaginaAtiva(url)
+    })
+
+    //CT-6.1 - validar pagina ativa - "Sementeira"
+    it('CT-6.1: Validar informações do banner principal - "Sementeira"', () => {
+        const elementoDoTitulo = '.segmentos-titulo-grid h2'
+        const textoTitulo = 'Softwares para gestão de sementeiras'
+        const elementoDescricao = '.segmentos-titulo-grid p'
+        const textoDescricao = 'Ganhe eficiência no processo de beneficiamento de sementes. Com as soluções Siagri, você gerencia desde o recebimento do grão, até o embarque de sementes.'
+        validaInformacoesBannerPrincipal(elementoDoTitulo, textoTitulo)
+        validaInformacoesBannerPrincipal(elementoDescricao, textoDescricao)
+        validaFormulario()
+    })
+
+    //CT-6.2 Validar informações dos desafios do segmento - "Sementeira"
+    it('CT-6.2: Validar informações do segmento - "Sementeira"', () => {
+        const desafiosDoSegmento = ['Gestão de recebimento, produção e expedição de sementes',
+            'Controle de lotes',
+            'Gestão de vendas das semente',
+            'Logística de embarque',
+            'Gestão da colheita e armazenagem de grãos']
+        validaDesafiosDoSegmento(desafiosDoSegmento)
+    })
+})
